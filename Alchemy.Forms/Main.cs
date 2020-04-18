@@ -24,6 +24,8 @@ namespace Sarsoo.Alchemy.Forms
                 Stream stream = new FileStream("config.bin", FileMode.Open, FileAccess.Read);
                 config = (Config)formatter.Deserialize(stream);
                 stream.Close();
+
+                // TODO load playlists if available
             }
             catch (Exception ex)
             {
@@ -50,24 +52,7 @@ namespace Sarsoo.Alchemy.Forms
             keys.Show();
         }
 
-        private void playlistRefreshButton_Click(object sender, EventArgs e)
-        {
-            if(config.SpotifyAccess.Length == 0)
-            {
-                SetMessage("No Spotify Access Token Provided");
-                return;
-            }
-
-            if (!RefreshPlaylists.IsBusy)
-            {
-                RefreshPlaylists.RunWorkerAsync();
-            } else
-            {
-                SetMessage("Already Refreshing");
-            }
-        }
-
-        private void SetMessage(String message)
+        private void SetMessage(string message)
         {
             messageLabel.Text = message;
             messageLabel.Visible = true;
@@ -83,22 +68,33 @@ namespace Sarsoo.Alchemy.Forms
                 TokenType = "Bearer"
             };
 
-            var _playlists = spot.GetUserPlaylists(config.spotifyID);
-            if(_playlists.HasError())
-            {
-                SetMessage($"Playlist Refresh Error: {_playlists.Error.Status} {_playlists.Error.Message}");
+            playlists.Clear();
+            Paging<SimplePlaylist> _playlistsPagers = spot.GetUserPlaylists(config.spotifyID);
+            while(true) {
+                if (_playlistsPagers.HasError())
+                {
+                    SetMessage($"Playlist Refresh Error: {_playlistsPagers.Error.Status} {_playlistsPagers.Error.Message}");
+                }
+                else
+                {
+                    playlists.AddRange(_playlistsPagers.Items);
+                    if (!_playlistsPagers.HasNextPage()) break;
+                    _playlistsPagers = spot.GetNextPage(_playlistsPagers);
+                }
             }
-            else
-            {
-                playlistListBox.Items.Clear();
-                //_playlists.Items.ForEach((playlist) => { playlistListBox.Items.Add(playlist); });
-                playlistListBox.Refresh();
-            }
+
+            playlistListBox.Invoke((MethodInvoker)delegate { 
+                playlistListBox.DataSource = playlists
+                    .OrderBy(playlist => playlist.Name.ToLower())
+                    .ToList();
+            });
+
+            // TODO dump playlists to binary
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            playlistListBox.DataSource = playlists;
+
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -108,6 +104,40 @@ namespace Sarsoo.Alchemy.Forms
             Stream stream = new FileStream("config.bin", FileMode.Create, FileAccess.Write);
             formatter.Serialize(stream, config);
             stream.Close();
+
+            // TODO dump playlists
+        }
+
+        private void playlistListBox_DoubleClick(object sender, EventArgs e)
+        {
+            if(playlistListBox.SelectedItem != null)
+            {
+                if (playlistListBox.SelectedItem is SimplePlaylist playlist)
+                {
+                    PlaylistForm form = new PlaylistForm(playlist);
+                    form.Show();
+                }
+                else
+                    SetMessage("Couldn't cast selected playlist");
+            }
+        }
+
+        private void refreshPlaylistsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (config.SpotifyAccess.Length == 0)
+            {
+                SetMessage("No Spotify Access Token Provided");
+                return;
+            }
+
+            if (!RefreshPlaylists.IsBusy)
+            {
+                RefreshPlaylists.RunWorkerAsync();
+            }
+            else
+            {
+                SetMessage("Already Refreshing");
+            }
         }
     }
 }

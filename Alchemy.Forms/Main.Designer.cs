@@ -33,12 +33,12 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aPIKeysToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.spotifyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.refreshPlaylistsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.playlistRefreshButton = new System.Windows.Forms.Button();
             this.playlistListBox = new System.Windows.Forms.ListBox();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.messageLabel = new System.Windows.Forms.ToolStripLabel();
             this.RefreshPlaylists = new System.ComponentModel.BackgroundWorker();
@@ -49,8 +49,10 @@
             // 
             // menuStrip1
             // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.WindowFrame;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
+            this.spotifyToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -70,16 +72,31 @@
             // aPIKeysToolStripMenuItem
             // 
             this.aPIKeysToolStripMenuItem.Name = "aPIKeysToolStripMenuItem";
-            this.aPIKeysToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aPIKeysToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.aPIKeysToolStripMenuItem.Text = "Config";
             this.aPIKeysToolStripMenuItem.Click += new System.EventHandler(this.aPIKeysToolStripMenuItem_Click);
             // 
             // closeToolStripMenuItem
             // 
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-            this.closeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.closeToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.closeToolStripMenuItem.Text = "Close";
             this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+            // 
+            // spotifyToolStripMenuItem
+            // 
+            this.spotifyToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refreshPlaylistsToolStripMenuItem});
+            this.spotifyToolStripMenuItem.Name = "spotifyToolStripMenuItem";
+            this.spotifyToolStripMenuItem.Size = new System.Drawing.Size(56, 20);
+            this.spotifyToolStripMenuItem.Text = "Spotify";
+            // 
+            // refreshPlaylistsToolStripMenuItem
+            // 
+            this.refreshPlaylistsToolStripMenuItem.Name = "refreshPlaylistsToolStripMenuItem";
+            this.refreshPlaylistsToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.refreshPlaylistsToolStripMenuItem.Text = "Refresh Playlists";
+            this.refreshPlaylistsToolStripMenuItem.Click += new System.EventHandler(this.refreshPlaylistsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -101,54 +118,36 @@
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.playlistRefreshButton);
             this.groupBox1.Controls.Add(this.playlistListBox);
+            this.groupBox1.ForeColor = System.Drawing.SystemColors.ControlLight;
             this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(289, 316);
+            this.groupBox1.Size = new System.Drawing.Size(610, 316);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Playlists";
-            // 
-            // playlistRefreshButton
-            // 
-            this.playlistRefreshButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.playlistRefreshButton.Location = new System.Drawing.Point(6, 287);
-            this.playlistRefreshButton.Name = "playlistRefreshButton";
-            this.playlistRefreshButton.Size = new System.Drawing.Size(277, 23);
-            this.playlistRefreshButton.TabIndex = 1;
-            this.playlistRefreshButton.Text = "Refresh";
-            this.playlistRefreshButton.UseVisualStyleBackColor = true;
-            this.playlistRefreshButton.Click += new System.EventHandler(this.playlistRefreshButton_Click);
             // 
             // playlistListBox
             // 
             this.playlistListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.playlistListBox.BackColor = System.Drawing.SystemColors.ControlDark;
             this.playlistListBox.DisplayMember = "Name";
+            this.playlistListBox.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.playlistListBox.FormattingEnabled = true;
             this.playlistListBox.Location = new System.Drawing.Point(6, 19);
             this.playlistListBox.Name = "playlistListBox";
-            this.playlistListBox.Size = new System.Drawing.Size(277, 264);
+            this.playlistListBox.Size = new System.Drawing.Size(598, 290);
             this.playlistListBox.TabIndex = 0;
-            this.playlistListBox.ValueMember = "Name";
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox2.Location = new System.Drawing.Point(307, 27);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(315, 316);
-            this.groupBox2.TabIndex = 1;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Scrobbles";
+            this.playlistListBox.ValueMember = "Id";
+            this.playlistListBox.DoubleClick += new System.EventHandler(this.playlistListBox_DoubleClick);
             // 
             // toolStrip1
             // 
+            this.toolStrip1.BackColor = System.Drawing.SystemColors.ControlDark;
             this.toolStrip1.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.toolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.messageLabel});
             this.toolStrip1.Location = new System.Drawing.Point(0, 346);
@@ -159,6 +158,7 @@
             // 
             // messageLabel
             // 
+            this.messageLabel.ForeColor = System.Drawing.SystemColors.ControlLightLight;
             this.messageLabel.Name = "messageLabel";
             this.messageLabel.Size = new System.Drawing.Size(81, 22);
             this.messageLabel.Text = "messageLabel";
@@ -172,9 +172,9 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.ClientSize = new System.Drawing.Size(634, 371);
             this.Controls.Add(this.toolStrip1);
-            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -203,12 +203,12 @@
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aPIKeysToolStripMenuItem;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Button playlistRefreshButton;
         private System.Windows.Forms.ListBox playlistListBox;
-        private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.ToolStrip toolStrip1;
         private System.Windows.Forms.ToolStripLabel messageLabel;
         private System.ComponentModel.BackgroundWorker RefreshPlaylists;
+        private System.Windows.Forms.ToolStripMenuItem spotifyToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem refreshPlaylistsToolStripMenuItem;
     }
 }
 
